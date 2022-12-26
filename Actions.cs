@@ -1,19 +1,24 @@
-﻿using OpenQA.Selenium.Chrome;
+﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 using SeleniumWebDriverForBeginners.UIElements;
+using System;
 using System.Threading;
 
 namespace SeleniumWebDriverForBeginners
 {
     public static class Actions
     {
-        public static void InitializeDriver()
+        public static IWebDriver InitializeDriver()
         {
-            Driver.driver = new ChromeDriver();
-            Driver.driver.Navigate().GoToUrl(Config.BaseURL);
+            IWebDriver driver = new ChromeDriver();
+            driver.Navigate().GoToUrl(Config.BaseURL);
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+
+            return driver;
         }
-        public static void FillLoginForm(string username, string password, string repeatPassword)
+        public static void FillLoginForm(string username, string password, string repeatPassword, IWebDriver driver)
         {
-            LoginScenarioPost lsPost = new LoginScenarioPost();
+            LoginScenarioPost lsPost = new LoginScenarioPost(driver);
 
             Thread.Sleep(500);
             lsPost.UsernameField.Clear();

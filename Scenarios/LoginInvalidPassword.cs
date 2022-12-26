@@ -4,9 +4,11 @@ using OpenQA.Selenium;
 
 namespace SeleniumWebDriverForBeginners.Scenarios
 {
+    [Parallelizable] //[Parallelizable(ParallelScope.None)]
     public class LoginInvalidPassword
     {
         IAlert alert;
+        public IWebDriver Driver { get; set; }
 
         public LoginInvalidPassword()
         {
@@ -15,17 +17,17 @@ namespace SeleniumWebDriverForBeginners.Scenarios
         [OneTimeSetUp]
         public void Initialize()
         {
-            Actions.InitializeDriver();
-            Navigate.LoginFormThroughTheMenu();
+            Driver = Actions.InitializeDriver();
+            Navigate.LoginFormThroughTheMenu(Driver);
 
         }
 
         [Test]
         public void LessThan5Chars()
         {
-            Actions.FillLoginForm(Config.Credentials.Valid.Username, Config.Credentials.Invalid.Password.FourCharacters, Config.Credentials.Valid.RepeatPassword);
+            Actions.FillLoginForm(Config.Credentials.Valid.Username, Config.Credentials.Invalid.Password.FourCharacters, Config.Credentials.Valid.RepeatPassword, Driver);
 
-            alert = Driver.driver.SwitchTo().Alert();
+            alert = Driver.SwitchTo().Alert();
             Assert.AreEqual(Config.AlertMessages.InvalidPassword, alert.Text);
             alert.Accept();
         }
@@ -33,9 +35,9 @@ namespace SeleniumWebDriverForBeginners.Scenarios
         [Test]
         public void MoreThan12Chars()
         {
-            Actions.FillLoginForm(Config.Credentials.Valid.Username, Config.Credentials.Invalid.Password.ThirteenCharacters, Config.Credentials.Valid.RepeatPassword);
+            Actions.FillLoginForm(Config.Credentials.Valid.Username, Config.Credentials.Invalid.Password.ThirteenCharacters, Config.Credentials.Valid.RepeatPassword, Driver);
 
-            alert = Driver.driver.SwitchTo().Alert();
+            alert = Driver.SwitchTo().Alert();
             Assert.AreEqual(Config.AlertMessages.InvalidPassword, alert.Text);
             alert.Accept();
         }
@@ -43,7 +45,7 @@ namespace SeleniumWebDriverForBeginners.Scenarios
         [OneTimeTearDown]
         public void CleanUp()
         {
-            Driver.driver.Quit();
+            Driver.Quit();
         }
     }
 }

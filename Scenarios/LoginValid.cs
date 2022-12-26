@@ -3,9 +3,11 @@ using OpenQA.Selenium;
 
 namespace SeleniumWebDriverForBeginners.Scenarios
 {
+    [Parallelizable]
     public class LoginValid
     {
         IAlert alert;
+        public IWebDriver Driver { get; set; }
 
         public LoginValid()
         {
@@ -14,17 +16,17 @@ namespace SeleniumWebDriverForBeginners.Scenarios
         [SetUp]
         public void Initialize()
         {
-            Actions.InitializeDriver();
-            Navigate.LoginFormThroughTheMenu();
+            Driver = Actions.InitializeDriver();
+            Navigate.LoginFormThroughTheMenu(Driver);
 
         }
 
         [Test]
         public void ValidLogin()
         {
-            Actions.FillLoginForm(Config.Credentials.Valid.Username, Config.Credentials.Valid.Password, Config.Credentials.Valid.RepeatPassword);
+            Actions.FillLoginForm(Config.Credentials.Valid.Username, Config.Credentials.Valid.Password, Config.Credentials.Valid.RepeatPassword, Driver);
 
-            alert = Driver.driver.SwitchTo().Alert();
+            alert = Driver.SwitchTo().Alert();
             Assert.AreEqual(Config.AlertMessages.SuccessfulLogin, alert.Text);
             alert.Accept();
         }
@@ -34,7 +36,7 @@ namespace SeleniumWebDriverForBeginners.Scenarios
         [TearDown]
         public void CleanUp()
         {
-            Driver.driver.Quit();
+            Driver.Quit();
         }
     }
 }

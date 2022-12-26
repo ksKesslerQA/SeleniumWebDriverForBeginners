@@ -5,9 +5,9 @@ namespace SeleniumWebDriverForBeginners
 {
     public class HomePage
     {
-        public HomePage()
+        public HomePage(IWebDriver driver)
         {
-            PageFactory.InitElements(Driver.driver, this);
+            PageFactory.InitElements(driver, this);
         }
 
         [FindsBy(How = How.CssSelector, Using = "#page-17 > header > h1")]
